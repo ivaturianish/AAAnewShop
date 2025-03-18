@@ -2,10 +2,12 @@
 
 # dependencies
 /node_modules
-client/node_modules
 /.pnp
 .pnp.js
 .yarn/install-state.gz
+/client/node_modules/.cache/
+/client/node_modules
+/node_modules/.cache/   
 
 # testing
 /coverage
@@ -35,3 +37,5 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+ 
