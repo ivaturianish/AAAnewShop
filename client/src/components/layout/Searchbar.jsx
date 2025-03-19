@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./Searchbar.css";
 
-const SearchBar = () => {
+const SearchBar = ({ onSearch }) => {
   const [query, setQuery] = useState("");
 
   const handleInputChange = (event) => {
@@ -9,7 +9,7 @@ const SearchBar = () => {
   };
 
   const handleSearch = () => {
-    alert(`You searched for: ${query}`);
+    onSearch(query);
   };
 
   return (
