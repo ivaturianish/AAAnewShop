@@ -1,84 +1,75 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import ProductCard from "../components/products/ProductCard"
-import "./Home.css"
+import { useState, useEffect } from "react";
+import ProductCard from "../components/products/ProductCard";
+import "./Products.css";
+import SearchBar from "../components/layout/Searchbar";
 
-const Home = () => {
-  const [products, setProducts] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+const Products = () => {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const productsPerPage = 12; // 3 rows of 4 products each
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        // In a real application, this would be an API call to your backend
-        // Example: const response = await fetch('/api/products');
-
-        // For demonstration, we'll use a timeout to simulate network request
         setTimeout(() => {
-          // Sample data
-          const sampleProducts = [
-            {
-              _id: "1",
-              name: "Wireless Headphones",
-              image: "https://via.placeholder.com/300",
-              description: "High-quality wireless headphones with noise cancellation.",
-              price: 99.99,
-              countInStock: 15,
-              rating: 4.5,
-              numReviews: 12,
-            },
-            {
-              _id: "2",
-              name: "Smartphone",
-              image: "https://via.placeholder.com/300",
-              description: "Latest smartphone with advanced camera features.",
-              price: 699.99,
-              countInStock: 7,
-              rating: 4.0,
-              numReviews: 8,
-            },
-            {
-              _id: "3",
-              name: "Laptop",
-              image: "https://via.placeholder.com/300",
-              description: "Powerful laptop for work and gaming.",
-              price: 1299.99,
-              countInStock: 5,
-              rating: 4.8,
-              numReviews: 15,
-            },
-            {
-              _id: "4",
-              name: "Smartwatch",
-              image: "https://via.placeholder.com/300",
-              description: "Track your fitness and stay connected.",
-              price: 199.99,
-              countInStock: 0,
-              rating: 4.2,
-              numReviews: 10,
-            },
-          ]
+          // Sample data for demonstration
+          const sampleProducts = Array.from({ length: 100 }, (_, index) => ({
+            _id: (index + 1).toString(),
+            name: `Product ${index + 1}`,
+            image: "https://via.placeholder.com/300",
+            description: `Description for product ${index + 1}`,
+            price: (index + 1) * 10,
+            countInStock: 10,
+            rating: 4.0,
+            numReviews: 5,
+          }));
 
-          setProducts(sampleProducts)
-          setLoading(false)
-        }, 1000)
+          setProducts(sampleProducts);
+          setLoading(false);
+        }, 1000);
       } catch (error) {
-        setError("Failed to fetch products. Please try again later.")
-        setLoading(false)
+        setError("Failed to fetch products. Please try again later.");
+        setLoading(false);
       }
-    }
+    };
 
-    fetchProducts()
-  }, [])
+    fetchProducts();
+  }, []);
+
+  // Calculate the products to display on the current page
+  const indexOfLastProduct = currentPage * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  const currentProducts = products.slice(
+    indexOfFirstProduct,
+    indexOfLastProduct
+  );
+
+  // Calculate total pages
+  const totalPages = Math.ceil(products.length / productsPerPage);
+
+  // Change page
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  // Handle "Go to Page" functionality
+  const handleGoToPage = (event) => {
+    event.preventDefault();
+    const pageInput = event.target.elements.pageNumber.value;
+    const pageNumber = parseInt(pageInput, 10);
+    if (pageNumber >= 1 && pageNumber <= totalPages) {
+      paginate(pageNumber);
+    }
+  };
 
   if (loading) {
-    return <div className="loader">Loading...</div>
+    return <div className="loader">Loading...</div>;
   }
 
   if (error) {
-    return <div className="error-message">{error}</div>
+    return <div className="error-message">{error}</div>;
   }
 
   return (
@@ -89,18 +80,52 @@ const Home = () => {
           <p>Discover amazing products at great prices</p>
         </div>
       </section>
-
-      <section className="featured-products">
-        <h2>Featured Products</h2>
+      <SearchBar />
+      <section className="all-products">
+        <h2>All Products</h2>
         <div className="products-grid">
-          {products.map((product) => (
+          {currentProducts.map((product) => (
             <ProductCard key={product._id} product={product} />
           ))}
         </div>
+        <div className="pagination">
+          <button
+            className="prev"
+            onClick={() => paginate(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            Previous
+          </button>
+          {[...Array(totalPages).keys()].map((number) => (
+            <button
+              key={number + 1}
+              onClick={() => paginate(number + 1)}
+              className={currentPage === number + 1 ? "active" : ""}
+            >
+              {number + 1}
+            </button>
+          ))}
+          <button
+            className="next"
+            onClick={() => paginate(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          >
+            Next
+          </button>
+          <form className="go-to-page" onSubmit={handleGoToPage}>
+            <input
+              type="number"
+              name="pageNumber"
+              min="1"
+              max={totalPages}
+              placeholder="Go to Page"
+            />
+            <button type="submit">Go</button>
+          </form>
+        </div>
       </section>
     </div>
-  )
-}
+  );
+};
 
-export default Home
-
+export default Products;

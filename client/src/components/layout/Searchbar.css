@@ -1,0 +1,24 @@
+.search-container {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Matches the gap in pagination */
+  margin-top: 20px; /* Adjust as needed */
+}
+
+.search-input {
+  width: 300px;
+  padding: 5px; /* Matches the padding in pagination */
+  border: 1px solid #ccc; /* Matches the border color in pagination */
+}
+
+.search-button {
+  padding: 5px 10px; /* Matches the button padding in pagination */
+  border: 1px solid #ccc; /* Matches the border color in pagination */
+  background-color: white; /* Matches the background color in pagination */
+  cursor: pointer;
+}
+
+.search-button:hover {
+  background-color: red; /* Matches the active button background in pagination */
+  color: white; /* Matches the active button text color in pagination */
+}
