@@ -1,24 +1,19 @@
-import { type NextRequest, NextResponse } from "next/server"
 import { getCollection } from "@/lib/mongodb"
+import { type NextRequest, NextResponse } from "next/server"
 
 export async function GET(request: NextRequest) {
   try {
-    const featured = request.nextUrl.searchParams.get("featured") === "true"
-    const tag = request.nextUrl.searchParams.get("tag")
+    const { searchParams } = new URL(request.url)
+    const featured = searchParams.get("featured") === "true"
+
     const collection = await getCollection("products")
 
-    let query = {}
-
-    // Build the query based on parameters
+    let products
     if (featured) {
-      query = { featured: true }
+      products = await collection.find({ featured: true }).toArray()
+    } else {
+      products = await collection.find({}).toArray()
     }
-
-    if (tag) {
-      query = { ...query, tags: tag }
-    }
-
-    const products = await collection.find(query).toArray()
 
     return NextResponse.json(products)
   } catch (error) {

@@ -4,9 +4,6 @@ import { getCollection } from "./mongodb"
 import { revalidatePath } from "next/cache"
 import type { CartItem } from "@/hooks/use-cart"
 
-// Import the additional products
-import { additionalProducts } from "./additional-products"
-
 // Types
 export interface Product {
   id: string
@@ -21,7 +18,6 @@ export interface Product {
   reviews: number
   stock: number
   featured: boolean
-  tags: string[] // Added tags field
 }
 
 export interface Order {
@@ -123,18 +119,15 @@ export async function storeSurveyResponse(fitnessGoal: "cutting" | "bulking" | "
   }
 }
 
-// Update the seedProducts function to include the additional products
+// Seed products if none exist
 export async function seedProducts() {
   try {
     const productsCollection = await getCollection("products")
     const count = await productsCollection.countDocuments()
 
     if (count === 0) {
-      // Combine original mock products with additional products
-      const allProducts = [...mockProducts, ...additionalProducts]
-
-      // Insert all products
-      await productsCollection.insertMany(allProducts)
+      // Insert mock products
+      await productsCollection.insertMany(mockProducts)
       revalidatePath("/products")
       return { success: true, message: "Products seeded successfully" }
     }
@@ -167,7 +160,6 @@ const mockProducts = [
     reviews: 124,
     stock: 50,
     featured: true,
-    tags: ["vitamins", "bone health", "immune support"],
   },
   {
     id: "2",
@@ -188,7 +180,6 @@ const mockProducts = [
     reviews: 98,
     stock: 75,
     featured: true,
-    tags: ["fish oil", "omega 3", "heart health", "brain health"],
   },
   // ... other products from the original mockProducts array
 ]

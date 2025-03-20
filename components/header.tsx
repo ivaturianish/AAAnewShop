@@ -1,3 +1,5 @@
+"use client"
+
 import Link from "next/link"
 import { ShoppingCart } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -22,6 +24,9 @@ export default function Header() {
             </Link>
             <Link href="/about" className="text-stone-600 hover:text-stone-900 font-medium">
               About
+            </Link>
+            <Link href="/admin" className="text-stone-600 hover:text-stone-900 font-medium">
+              Admin
             </Link>
           </nav>
 

@@ -11,10 +11,9 @@ import { getProducts } from "@/lib/api"
 
 interface ProductGridProps {
   featured?: boolean
-  tag?: string
 }
 
-export default function ProductGrid({ featured = false, tag }: ProductGridProps) {
+export default function ProductGrid({ featured = false }: ProductGridProps) {
   const { toast } = useToast()
   const { addToCart } = useCart()
   const [products, setProducts] = useState<any[]>([])
@@ -25,7 +24,7 @@ export default function ProductGrid({ featured = false, tag }: ProductGridProps)
     const fetchProducts = async () => {
       try {
         setLoading(true)
-        const data = await getProducts(featured, tag)
+        const data = await getProducts(featured)
         setProducts(data)
       } catch (err) {
         setError("Failed to load products")
@@ -36,7 +35,7 @@ export default function ProductGrid({ featured = false, tag }: ProductGridProps)
     }
 
     fetchProducts()
-  }, [featured, tag])
+  }, [featured])
 
   // Fallback products for preview
   const fallbackProducts = [
