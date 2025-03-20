@@ -1,14 +1,28 @@
-"use client";
 import { getCollection } from "@/lib/mongodb"
-import type { Order } from "@/lib/server-actions"
-import { formatDistanceToNow } from "date-fns"
 import Header from "@/components/header"
+import { formatDistanceToNow } from "date-fns"
 
 export const dynamic = "force-dynamic"
 
+interface OrderItem {
+  id: string
+  name: string
+  price: number
+  quantity: number
+  image?: string
+}
+
+interface Order {
+  id: string
+  items: OrderItem[]
+  total: number
+  status: string
+  createdAt: Date | string
+}
+
 export default async function OrdersPage() {
   const ordersCollection = await getCollection("orders")
-  const orders = (await ordersCollection.find({}).sort({ createdAt: -1 }).toArray() as unknown) as Order[]
+  const orders = (await ordersCollection.find({}).sort({ createdAt: -1 }).toArray()) as unknown as Order[]
 
   return (
     <>
@@ -34,9 +48,7 @@ export default async function OrdersPage() {
                     <div>
                       <h3 className="font-medium text-stone-800">Order #{order.id.substring(6, 14)}</h3>
                       <p className="text-sm text-stone-500">
-                        {order.createdAt instanceof Date
-                          ? formatDistanceToNow(order.createdAt, { addSuffix: true })
-                          : formatDistanceToNow(new Date(order.createdAt), { addSuffix: true })}
+                        {formatDistanceToNow(new Date(order.createdAt), { addSuffix: true })}
                       </p>
                     </div>
                     <div className="mt-2 md:mt-0">

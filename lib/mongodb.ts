@@ -1,3 +1,5 @@
+"use server"
+
 import { MongoClient, ServerApiVersion } from "mongodb"
 
 // Replace with your MongoDB connection string

@@ -1,4 +1,3 @@
-"use client";
 import Link from "next/link"
 import { getCollection } from "@/lib/mongodb"
 import Header from "@/components/header"

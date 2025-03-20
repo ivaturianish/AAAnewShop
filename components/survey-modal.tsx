@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
+import storeSurveyResponse from "@/lib/api"
 
 type FitnessGoal = "cutting" | "bulking" | "maintenance" | null
 
@@ -25,10 +26,17 @@ export default function SurveyModal() {
     }
   }, [])
 
-  const handleSelection = (goal: FitnessGoal) => {
+  const handleSelection = async (goal: FitnessGoal) => {
     // Save the user's selection
     localStorage.setItem("fitness-goal", goal || "")
     localStorage.setItem("survey-completed", "true")
+
+    // Store the response in MongoDB
+    try {
+      await storeSurveyResponse(goal)
+    } catch (error) {
+      console.error("Failed to store survey response:", error)
+    }
 
     // Close the modal
     setHasAnswered(true)

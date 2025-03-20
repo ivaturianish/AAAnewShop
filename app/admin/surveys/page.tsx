@@ -1,10 +1,14 @@
-"use client";
 import { getCollection } from "@/lib/mongodb"
-import type { SurveyResponse } from "@/lib/server-actions"
-import { formatDistanceToNow } from "date-fns"
 import Header from "@/components/header"
+import { formatDistanceToNow } from "date-fns"
 
 export const dynamic = "force-dynamic"
+
+interface SurveyResponse {
+  id: string
+  fitnessGoal: "cutting" | "bulking" | "maintenance" | null
+  createdAt: Date | string
+}
 
 export default async function SurveysPage() {
   const surveysCollection = await getCollection("surveys")
@@ -86,9 +90,7 @@ export default async function SurveysPage() {
                           Goal: {survey.fitnessGoal ? survey.fitnessGoal : "Not specified"}
                         </p>
                         <p className="text-sm text-stone-500">
-                          {survey.createdAt instanceof Date
-                            ? formatDistanceToNow(survey.createdAt, { addSuffix: true })
-                            : formatDistanceToNow(new Date(survey.createdAt), { addSuffix: true })}
+                          {formatDistanceToNow(new Date(survey.createdAt), { addSuffix: true })}
                         </p>
                       </div>
                       <div className="text-xs px-2 py-1 rounded-full bg-stone-100 text-stone-800">
