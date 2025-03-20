@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic"
 
 export default async function OrdersPage() {
   const ordersCollection = await getCollection("orders")
-  const orders = (await ordersCollection.find({}).sort({ createdAt: -1 }).toArray()) as Order[]
+  const orders = (await ordersCollection.find({}).sort({ createdAt: -1 }).toArray() as unknown) as Order[]
 
   return (
     <>

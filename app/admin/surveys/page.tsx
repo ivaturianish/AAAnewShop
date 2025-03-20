@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic"
 
 export default async function SurveysPage() {
   const surveysCollection = await getCollection("surveys")
-  const surveys = (await surveysCollection.find({}).sort({ createdAt: -1 }).toArray()) as SurveyResponse[]
+  const surveys = (await surveysCollection.find({}).sort({ createdAt: -1 }).toArray()) as unknown as SurveyResponse[]
 
   // Count responses by goal
   const goalCounts = {
