@@ -4,14 +4,21 @@ import { getCollection } from "@/lib/mongodb"
 export async function GET(request: NextRequest) {
   try {
     const featured = request.nextUrl.searchParams.get("featured") === "true"
+    const tag = request.nextUrl.searchParams.get("tag")
     const collection = await getCollection("products")
 
-    let products
+    let query = {}
+
+    // Build the query based on parameters
     if (featured) {
-      products = await collection.find({ featured: true }).toArray()
-    } else {
-      products = await collection.find({}).toArray()
+      query = { featured: true }
     }
+
+    if (tag) {
+      query = { ...query, tags: tag }
+    }
+
+    const products = await collection.find(query).toArray()
 
     return NextResponse.json(products)
   } catch (error) {

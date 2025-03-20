@@ -1,8 +1,13 @@
 import type { CartItem } from "@/hooks/use-cart"
 
 // Client-side API functions that call server actions
-export async function getProducts(featured = false) {
-  const response = await fetch(`/api/products${featured ? "?featured=true" : ""}`)
+export async function getProducts(featured = false, tag?: string) {
+  let url = `/api/products?featured=${featured}`
+  if (tag) {
+    url += `&tag=${tag}`
+  }
+
+  const response = await fetch(url)
   if (!response.ok) {
     throw new Error("Failed to fetch products")
   }

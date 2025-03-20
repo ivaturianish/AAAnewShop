@@ -1,3 +1,4 @@
+"use server"
 import Link from "next/link"
 import { getCollection } from "@/lib/mongodb"
 import Header from "@/components/header"
@@ -81,9 +82,9 @@ export default async function AdminPage() {
                 Surveys
               </Button>
             </Link>
-            <Link href="/api/seed">
+            <Link href="/admin/products">
               <Button variant="outline" size="sm" className="w-full">
-                Seed Database
+                Products
               </Button>
             </Link>
           </div>
