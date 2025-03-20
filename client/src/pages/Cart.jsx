@@ -1,12 +1,13 @@
 "use client"
 
 import { useContext } from "react"
-import Link from "next/link"
-import { CartContext } from "../../client/src/context/CartContext"
-import "../../client/src/pages/Cart.css"
+import { Link, useNavigate } from "react-router-dom"
+import { CartContext } from "../context/CartContext"
+import "./Cart.css"
 
-export default function CartPage() {
+const Cart = () => {
   const { cart, removeFromCart, updateCartQuantity } = useContext(CartContext)
+  const navigate = useNavigate()
 
   // Calculate cart totals
   const itemsPrice = cart.reduce((a, c) => a + c.price * c.quantity, 0)
@@ -15,7 +16,7 @@ export default function CartPage() {
   const totalPrice = itemsPrice + taxPrice + shippingPrice
 
   const handleCheckout = () => {
-    window.location.href = "/checkout"
+    navigate("/checkout")
   }
 
   if (cart.length === 0) {
@@ -23,7 +24,7 @@ export default function CartPage() {
       <div className="empty-cart">
         <h2>Your cart is empty</h2>
         <p>Looks like you haven't added any products to your cart yet.</p>
-        <Link href="/" className="btn btn-primary">
+        <Link to="/" className="btn btn-primary">
           Continue Shopping
         </Link>
       </div>
@@ -43,7 +44,7 @@ export default function CartPage() {
               </div>
 
               <div className="cart-item-details">
-                <Link href={`/product/${item._id}`} className="cart-item-name">
+                <Link to={`/product/${item._id}`} className="cart-item-name">
                   {item.name}
                 </Link>
 
@@ -98,7 +99,7 @@ export default function CartPage() {
             Proceed to Checkout
           </button>
 
-          <Link href="/" className="continue-shopping">
+          <Link to="/" className="continue-shopping">
             Continue Shopping
           </Link>
         </div>
@@ -106,4 +107,6 @@ export default function CartPage() {
     </div>
   )
 }
+
+export default Cart
 

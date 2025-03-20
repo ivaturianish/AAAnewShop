@@ -1,66 +1,80 @@
-import Link from "next/link"
-import ProductGrid from "@/components/product-grid"
-import { Button } from "@/components/ui/button"
-import Header from "@/components/header"
-import Footer from "@/components/footer"
-import SurveyModal from "@/components/survey-modal"
-import PersonalizedRecommendations from "@/components/personalized-recommendations"
+import Image from "next/image"
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-stone-50">
-      <Header />
-      <SurveyModal />
+    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
+        <Image
+          className="dark:invert"
+          src="https://nextjs.org/icons/next.svg"
+          alt="Next.js logo"
+          width={180}
+          height={38}
+          priority
+        />
+        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
+          <li className="mb-2">
+            Get started by editing{" "}
+            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">app/page.tsx</code>.
+          </li>
+          <li>Save and see your changes instantly.</li>
+        </ol>
 
-      <main>
-        <section className="py-12 md:py-20 bg-stone-100 border-b border-stone-200">
-          <div className="container mx-auto px-4 text-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-6 text-stone-800">
-              Natural Supplements for Your Wellbeing
-            </h1>
-            <p className="text-lg md:text-xl text-stone-600 mb-8 max-w-2xl mx-auto">
-              Handcrafted supplements made with quality ingredients to support your health journey.
-            </p>
-            <Link href="/products">
-              <Button className="bg-stone-800 hover:bg-stone-700 text-white px-6 py-3 rounded-md">Shop Now</Button>
-            </Link>
-          </div>
-        </section>
-
-        <section className="py-12 container mx-auto px-4">
-          <div className="mb-4">
-            <PersonalizedRecommendations />
-          </div>
-          <h2 className="text-2xl font-bold mb-8 text-stone-800">Featured Products</h2>
-          <ProductGrid featured={true} />
-        </section>
-
-        <section className="py-12 bg-stone-100 border-y border-stone-200">
-          <div className="container mx-auto px-4">
-            <h2 className="text-2xl font-bold mb-8 text-stone-800">Why Choose AAA Supplements?</h2>
-            <div className="grid md:grid-cols-3 gap-8">
-              <div className="bg-white p-6 rounded-lg border border-stone-200 shadow-sm">
-                <h3 className="text-xl font-semibold mb-3 text-stone-800">Quality Ingredients</h3>
-                <p className="text-stone-600">
-                  We source only the highest quality natural ingredients for our supplements.
-                </p>
-              </div>
-              <div className="bg-white p-6 rounded-lg border border-stone-200 shadow-sm">
-                <h3 className="text-xl font-semibold mb-3 text-stone-800">Handcrafted Care</h3>
-                <p className="text-stone-600">
-                  Each product is made with attention to detail and genuine care for your health.
-                </p>
-              </div>
-              <div className="bg-white p-6 rounded-lg border border-stone-200 shadow-sm">
-                <h3 className="text-xl font-semibold mb-3 text-stone-800">Transparent Process</h3>
-                <p className="text-stone-600">We believe in transparency about what goes into our supplements.</p>
-              </div>
-            </div>
-          </div>
-        </section>
+        <div className="flex gap-4 items-center flex-col sm:flex-row">
+          <a
+            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
+            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Image
+              className="dark:invert"
+              src="https://nextjs.org/icons/vercel.svg"
+              alt="Vercel logomark"
+              width={20}
+              height={20}
+            />
+            Deploy now
+          </a>
+          <a
+            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
+            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Read our docs
+          </a>
+        </div>
       </main>
-
-      <Footer />
+      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
+        <a
+          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
+          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Image aria-hidden src="https://nextjs.org/icons/file.svg" alt="File icon" width={16} height={16} />
+          Learn
+        </a>
+        <a
+          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
+          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Image aria-hidden src="https://nextjs.org/icons/window.svg" alt="Window icon" width={16} height={16} />
+          Examples
+        </a>
+        <a
+          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
+          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Image aria-hidden src="https://nextjs.org/icons/globe.svg" alt="Globe icon" width={16} height={16} />
+          Go to nextjs.org →
+        </a>
+      </footer>
     </div>
   )
 }

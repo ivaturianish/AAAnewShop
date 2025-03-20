@@ -1,42 +1,80 @@
-import ProductGrid from "@/components/product-grid"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Search } from "lucide-react"
-import Header from "@/components/header"
+"use client"
+
+import { useState, useEffect } from "react"
+import ProductCard from "../../client/src/components/products/ProductCard"
+import "../../client/src/pages/Home.css"
+
+interface Product {
+  _id: string
+  name: string
+  image: string
+  description: string
+  price: number
+  countInStock: number
+  rating: number
+  numReviews: number
+  brand: string
+  category: string
+}
 
 export default function ProductsPage() {
+  const [products, setProducts] = useState<Product[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true)
+        const response = await fetch("/api/products")
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch products")
+        }
+
+        const data = await response.json()
+        setProducts(data.products)
+        setLoading(false)
+      } catch (error) {
+        console.error("Error fetching products:", error)
+        setError("Failed to fetch products. Please try again later.")
+        setLoading(false)
+      }
+    }
+
+    fetchProducts()
+  }, [])
+
+  if (loading) {
+    return <div className="loader">Loading products from MongoDB...</div>
+  }
+
+  if (error) {
+    return <div className="error-message">{error}</div>
+  }
+
   return (
-    <>
-      <Header />
-      <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-6 text-stone-800">All Products</h1>
-
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-          <div className="relative w-full md:w-64">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-stone-400" />
-            <Input
-              type="search"
-              placeholder="Search products..."
-              className="pl-8 border-stone-300 focus:border-stone-500"
-            />
-          </div>
-
-          <div className="flex gap-2">
-            <Button variant="outline" size="sm" className="text-stone-600">
-              Filter
-            </Button>
-            <select className="border border-stone-300 rounded-md px-3 py-1 text-sm text-stone-600 focus:outline-none focus:ring-1 focus:ring-stone-500">
-              <option>Sort by: Featured</option>
-              <option>Price: Low to High</option>
-              <option>Price: High to Low</option>
-              <option>Newest</option>
-            </select>
-          </div>
+    <div className="home-page">
+      <section className="hero-section">
+        <div className="hero-content">
+          <h1>Our Products</h1>
+          <p>Browse our collection of quality products</p>
         </div>
+      </section>
 
-        <ProductGrid />
-      </div>
-    </>
+      <section className="featured-products">
+        <h2>All Products</h2>
+        {products.length === 0 ? (
+          <div className="text-center p-10">No products found in the database.</div>
+        ) : (
+          <div className="products-grid">
+            {products.map((product) => (
+              <ProductCard key={product._id} product={product} />
+            ))}
+          </div>
+        )}
+      </section>
+    </div>
   )
 }
 

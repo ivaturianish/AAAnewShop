@@ -1,46 +1,44 @@
-import { MongoClient, ServerApiVersion } from "mongodb"
+import mongoose from "mongoose"
 
-// Replace with your MongoDB connection string
-const uri = process.env.MONGODB_URI || "mongodb://localhost:27017/supplement-store"
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/supplement-store"
 
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
-const client = new MongoClient(uri, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  },
-})
-
-let clientPromise: Promise<MongoClient>
-
-if (process.env.NODE_ENV === "development") {
-  // In development mode, use a global variable so that the value
-  // is preserved across module reloads caused by HMR (Hot Module Replacement).
-  const globalWithMongo = global as typeof globalThis & {
-    _mongoClientPromise?: Promise<MongoClient>
-  }
-
-  if (!globalWithMongo._mongoClientPromise) {
-    globalWithMongo._mongoClientPromise = client.connect()
-  }
-  clientPromise = globalWithMongo._mongoClientPromise
-} else {
-  // In production mode, it's best to not use a global variable.
-  clientPromise = client.connect()
+if (!MONGODB_URI) {
+  throw new Error("Please define the MONGODB_URI environment variable")
 }
 
-export default clientPromise
+/**
+ * Global is used here to maintain a cached connection across hot reloads
+ * in development. This prevents connections growing exponentially
+ * during API Route usage.
+ */
+let cached = global.mongoose
 
-// Helper function to get the database
-export async function getDatabase() {
-  const client = await clientPromise
-  return client.db("supplement-store")
+if (!cached) {
+  cached = global.mongoose = { conn: null, promise: null }
 }
 
-// Helper functions for collections
-export async function getCollection(collectionName: string) {
-  const db = await getDatabase()
-  return db.collection(collectionName)
+export async function connectToDatabase() {
+  if (cached.conn) {
+    return cached.conn
+  }
+
+  if (!cached.promise) {
+    const opts = {
+      bufferCommands: false,
+    }
+
+    cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
+      return mongoose
+    })
+  }
+
+  try {
+    cached.conn = await cached.promise
+  } catch (e) {
+    cached.promise = null
+    throw e
+  }
+
+  return cached.conn
 }
 
