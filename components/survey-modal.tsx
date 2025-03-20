@@ -4,7 +4,6 @@ import { useState, useEffect } from "react"
 import { X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
-import storeSurveyResponse from "@/lib/api"
 
 type FitnessGoal = "cutting" | "bulking" | "maintenance" | null
 
@@ -33,7 +32,13 @@ export default function SurveyModal() {
 
     // Store the response in MongoDB
     try {
-      await storeSurveyResponse(goal)
+      await fetch("/api/survey", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ fitnessGoal: goal }),
+      })
     } catch (error) {
       console.error("Failed to store survey response:", error)
     }

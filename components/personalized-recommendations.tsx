@@ -4,7 +4,6 @@ import { useEffect, useState } from "react"
 import { useFitnessGoal } from "@/hooks/use-fitness-goal"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import ProductGrid from "./product-grid"
 
 export default function PersonalizedRecommendations() {
   const { fitnessGoal, isLoading } = useFitnessGoal()
@@ -25,17 +24,17 @@ export default function PersonalizedRecommendations() {
     cutting: {
       title: "Supplements for Cutting",
       description: "These supplements can help support your fat loss goals while preserving lean muscle.",
-      tag: "cutting",
+      products: ["Vitamin D3 + K2 Complex", "Omega-3 Fish Oil", "Zinc Picolinate"],
     },
     bulking: {
       title: "Supplements for Bulking",
       description: "These supplements can help support muscle growth and recovery during your bulk.",
-      tag: "bulking",
+      products: ["Probiotic Complex", "Magnesium Glycinate", "Vitamin C with Rose Hips"],
     },
     maintenance: {
       title: "Supplements for Staying Lean",
       description: "These supplements can help maintain your current physique and support overall health.",
-      tag: "maintenance",
+      products: ["Ashwagandha Root Extract", "Turmeric Curcumin with BioPerine", "Vitamin D3 + K2 Complex"],
     },
   }
 
@@ -50,14 +49,18 @@ export default function PersonalizedRecommendations() {
       <h3 className="text-xl font-bold text-stone-800 mb-2">{goalData.title}</h3>
       <p className="text-stone-600 mb-4">{goalData.description}</p>
 
-      <div className="mb-6">
-        <ProductGrid tag={goalData.tag} featured={true} />
-      </div>
+      <ul className="list-disc pl-5 mb-4 text-stone-700">
+        {goalData.products.map((product, index) => (
+          <li key={index} className="mb-1">
+            {product}
+          </li>
+        ))}
+      </ul>
 
       <div className="flex justify-between items-center">
-        <Link href={`/products?tag=${goalData.tag}`}>
+        <Link href="/products">
           <Button variant="outline" className="text-stone-700 border-stone-300">
-            View All {fitnessGoal.charAt(0).toUpperCase() + fitnessGoal.slice(1)} Products
+            View All Products
           </Button>
         </Link>
 

@@ -1,11 +1,10 @@
-import { type NextRequest, NextResponse } from "next/server"
 import { getCollection } from "@/lib/mongodb"
+import { type NextRequest, NextResponse } from "next/server"
 import type { CartItem } from "@/hooks/use-cart"
 
 export async function POST(request: NextRequest) {
   try {
     const { cart } = (await request.json()) as { cart: CartItem[] }
-    const ordersCollection = await getCollection("orders")
 
     // Calculate total
     const subtotal = cart.reduce((total, item) => total + item.price * item.quantity, 0)
@@ -22,6 +21,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Insert order into MongoDB
+    const ordersCollection = await getCollection("orders")
     await ordersCollection.insertOne(order)
 
     // Return a simulated checkout session
@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
     })
   } catch (error) {
     console.error("Error creating checkout session:", error)
-    return NextResponse.json({ error: "Checkout failed" }, { status: 500 })
+    return NextResponse.json({ error: "Failed to create checkout session" }, { status: 500 })
   }
 }
 
