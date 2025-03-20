@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
 import SurveyModal from "@/components/survey-modal"
-import PersonalizedRecommendations from "@/components/personalized-recommendations"
+import { ProductRecommendations } from "@/components/product-recommendations";
 
 export default function Home() {
   return (
@@ -30,7 +30,7 @@ export default function Home() {
 
         <section className="py-12 container mx-auto px-4">
           <div className="mb-4">
-            <PersonalizedRecommendations />
+            <ProductRecommendations productId="example-product-id" />
           </div>
           <h2 className="text-2xl font-bold mb-8 text-stone-800">Featured Products</h2>
           <ProductGrid featured={true} />
