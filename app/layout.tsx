@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
 import { CartProvider } from "@/hooks/use-cart"
+import { SurveyModalProvider } from "@/hooks/use-survey-modal"
 import { Toaster } from "@/components/ui/toaster"
 
 const inter = Inter({ subsets: ["latin"] })
@@ -10,7 +11,6 @@ const inter = Inter({ subsets: ["latin"] })
 export const metadata: Metadata = {
   title: "AAA Supplements",
   description: "Handcrafted supplements for your wellbeing",
-    generator: 'v0.dev'
 }
 
 export default function RootLayout({
@@ -22,14 +22,13 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <CartProvider>
-          {children}
-          <Toaster />
+          <SurveyModalProvider>
+            {children}
+            <Toaster />
+          </SurveyModalProvider>
         </CartProvider>
       </body>
     </html>
   )
 }
 
-
-
-import './globals.css'

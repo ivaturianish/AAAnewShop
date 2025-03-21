@@ -4,26 +4,28 @@ import { useState, useEffect } from "react"
 import { X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
+import { storeSurveyResponse } from "@/lib/api"
+import { useSurveyModal } from "@/hooks/use-survey-modal"
 
 type FitnessGoal = "cutting" | "bulking" | "maintenance" | null
 
 export default function SurveyModal() {
-  const [open, setOpen] = useState(false)
+  const { isOpen, openSurvey, closeSurvey } = useSurveyModal()
   const [hasAnswered, setHasAnswered] = useState(false)
 
   useEffect(() => {
     // Check if user has already answered the survey
     const surveyCompleted = localStorage.getItem("survey-completed")
 
-    if (!surveyCompleted) {
+    if (!surveyCompleted && !isOpen) {
       // Show survey after a short delay
       const timer = setTimeout(() => {
-        setOpen(true)
+        openSurvey()
       }, 2000)
 
       return () => clearTimeout(timer)
     }
-  }, [])
+  }, [isOpen, openSurvey])
 
   const handleSelection = async (goal: FitnessGoal) => {
     // Save the user's selection
@@ -32,29 +34,23 @@ export default function SurveyModal() {
 
     // Store the response in MongoDB
     try {
-      await fetch("/api/survey", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ fitnessGoal: goal }),
-      })
+      await storeSurveyResponse(goal)
     } catch (error) {
       console.error("Failed to store survey response:", error)
     }
 
     // Close the modal
     setHasAnswered(true)
-    setTimeout(() => setOpen(false), 500)
+    setTimeout(() => closeSurvey(), 500)
   }
 
   const handleClose = () => {
     localStorage.setItem("survey-completed", "true")
-    setOpen(false)
+    closeSurvey()
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={isOpen} onOpenChange={closeSurvey}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="text-xl font-bold text-stone-800">What's Your Fitness Goal?</DialogTitle>

@@ -4,9 +4,11 @@ import { useEffect, useState } from "react"
 import { useFitnessGoal } from "@/hooks/use-fitness-goal"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import { useSurveyModal } from "@/hooks/use-survey-modal"
 
 export default function PersonalizedRecommendations() {
-  const { fitnessGoal, isLoading } = useFitnessGoal()
+  const { fitnessGoal, isLoading, updateFitnessGoal } = useFitnessGoal()
+  const { openSurvey } = useSurveyModal()
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
@@ -44,9 +46,22 @@ export default function PersonalizedRecommendations() {
     return null
   }
 
+  const handleChangeSurvey = () => {
+    // Clear the survey completed flag so the user can take it again
+    localStorage.removeItem("survey-completed")
+    // Open the survey modal
+    openSurvey()
+  }
+
   return (
     <div className="bg-stone-50 border border-stone-200 rounded-lg p-6 mb-8">
-      <h3 className="text-xl font-bold text-stone-800 mb-2">{goalData.title}</h3>
+      <div className="flex justify-between items-center mb-4">
+        <h3 className="text-xl font-bold text-stone-800">{goalData.title}</h3>
+        <Button variant="outline" size="sm" className="text-stone-600 border-stone-300" onClick={handleChangeSurvey}>
+          Change Survey Response
+        </Button>
+      </div>
+
       <p className="text-stone-600 mb-4">{goalData.description}</p>
 
       <ul className="list-disc pl-5 mb-4 text-stone-700">
